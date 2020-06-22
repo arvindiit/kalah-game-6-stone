@@ -4,11 +4,16 @@ import com.arvind.assignment.kalah.exception.InvalidPitException;
 import com.arvind.assignment.kalah.domain.Game;
 import com.arvind.assignment.kalah.domain.Player;
 import com.arvind.assignment.kalah.utils.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-
+/**
+ * Author: Arvind Pandey On: 20/06/2020
+ * Facade class to control the game.
+ */
 @Component
+@Slf4j
 public class GameFacade {
 
     /**
@@ -23,7 +28,7 @@ public class GameFacade {
     public void makeMove(int pitId, Game game){
         //before making the move, check for the all the valid move
         validateMove(pitId, game);
-
+        log.info("Move validated for game {} and pit {}", game.getId(), pitId);
 
         //start the move
         Map<Integer, Integer> gameBoard = game.getGameBoard();
@@ -62,11 +67,11 @@ public class GameFacade {
             int secondPlayerStones = gameBoard.get(Player.SECOND_PLAYER.getKalahId());
 
             if(firstPlayerStones > secondPlayerStones){
-                game.setWinner("First Player");
+                game.setWinner(Player.FIRST_PLAYER.name());
             } else if(firstPlayerStones < secondPlayerStones){
-                game.setWinner("Second Player");
+                game.setWinner(Player.SECOND_PLAYER.name());
             }else{
-                game.setWinner("Draw");
+                game.setWinner(Constants.DRAW);
             }
         }
 
@@ -80,18 +85,22 @@ public class GameFacade {
     private void validateMove(int pitId, Game game){
         Player player = game.getPlayer();
         if(player.getKalahId() == pitId || player.getOppositePlayer().getKalahId() == pitId){
-            throw new InvalidPitException("You can not select a Kalah as pit");
+            log.error("You can not select a Kalah as pit Game id: {} and pit id: {}", game.getId(), pitId);
+            throw new InvalidPitException("You can not select a Kalah as pit.");
         }
 
         if(game.getGameBoard().get(pitId) == 0){
+            log.error("This pit is empty Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("This pit is empty.");
         }
 
         if(!player.getPits().contains(pitId)){
+            log.error("This pit is not your pit. Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("This pit is not your pit. Your pits are: ", player.getPits());
         }
 
         if(pitId < Constants.FIRST_PIT_INDEX || pitId > Constants.LAST_PIT_INDEX){
+            log.error("Invalid pit. Pits are only from 1 -> 6 and 8 -> 13. Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("Invalid pit. Pits are only from 1 -> 6 and 8 -> 13. Your pits are: ", player.getPits());
         }
 
@@ -109,13 +118,13 @@ public class GameFacade {
             int oppositePit = Constants.LAST_PIT_INDEX - pitId;
             int oppositeStones = gameBoard.get(oppositePit);
             if(oppositeStones != 0) {
+                log.info("This is last pit for game {} and pit {}", game.getId(), pitId);
                 //clear your and opposite pit and put stones in your kalah
                 gameBoard.replace(pitId, 0);
                 gameBoard.replace(oppositePit, 0);
                 addStonesToPit(game.getPlayer().getKalahId(), oppositeStones+1, gameBoard);
             }
         }
-
     }
 
     /**
@@ -132,6 +141,7 @@ public class GameFacade {
         if(isCurrentPlayerPitEmpty || isOppsitePlayerPitEmpty){
             addAllStonesToKalah(game.getPlayer(), game.getGameBoard());
             addAllStonesToKalah(game.getPlayer().getOppositePlayer(), game.getGameBoard());
+            log.info("Game {} is over now", game.getId(), game.getId());
             return true;
         }
         return false;

@@ -9,6 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+/**
+ * Author: Arvind Pandey On: 20/06/2020
+ * Service class to be call from controller.
+ * Acts as layer between controller and facade
+ */
+
 @Service
 public class GameService {
 
@@ -21,12 +27,20 @@ public class GameService {
     @Autowired
     Environment environment;
 
+    /**
+     * Creating a new Game
+     * @return GameDTO will not contain status(=null)
+     */
     public GameDTO createGame(){
         Game game =  gameRepository.save(new Game());
         return game.toNewGameDTO(environment.getProperty("kalah.game.url"));
 
     }
 
+    /**
+     * For making move by the player
+     * @return GameDTO will contain status
+     */
     public GameDTO makeMove(int gameId, int pitId) {
         Game existingGame = gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException("No Game found with id: " + gameId));
         if( existingGame.getStatus().equals(Game.Status.CREATED)){

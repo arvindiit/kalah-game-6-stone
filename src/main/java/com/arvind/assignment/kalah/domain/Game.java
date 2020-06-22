@@ -10,8 +10,7 @@ import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Author: Arvind Pandey
- * On: 20/06/2020
+ * Author: Arvind Pandey On: 20/06/2020
  * Entity class for Game
  */
 @Entity
@@ -42,11 +41,23 @@ public class Game {
         this.gameBoard = createBoard();
     }
 
-
+    /**
+     * Conversion from Game to GameDTO for sending the response
+     * Since this is for new Game, DTO does not contain status
+     * @param gameUrl
+     * @return
+     */
     public GameDTO toNewGameDTO(String gameUrl) {
         String url = new UriTemplate(gameUrl).expand(id).toString();
         return new GameDTO(id, url);
     }
+
+    /**
+     * Conversion from Game to GameDTO for sending the response
+     * Since this is for existing Game, DTO does contain status
+     * @param gameUrl
+     * @return
+     */
 
     public GameDTO toGameDTO(String gameUrl) {
         Map<Integer, Integer> status = this.getGameBoard();
@@ -54,6 +65,10 @@ public class Game {
         return new GameDTO(id, url, status, winner);
     }
 
+    /**
+     * Creating the game board at start of the game
+     * @return
+     */
     private Map<Integer, Integer> createBoard() {
         Map<Integer, Integer> newBoard = new HashMap<>();
         for (int i = Constants.FIRST_PIT_INDEX; i <= Constants.LAST_PIT_INDEX; i++) {

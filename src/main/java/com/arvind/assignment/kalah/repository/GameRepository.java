@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import javax.transaction.Transactional;
 
 /**
- * Author: Arvind Pandey
- * On: 20/06/2020
+ * Author: Arvind Pandey On: 20/06/2020
  * Repository class to perform CRUD operation on game resource
  */
 @Transactional

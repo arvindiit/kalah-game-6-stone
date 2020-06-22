@@ -11,4 +11,6 @@ public interface Constants {
     int FIRST_PIT_INDEX = 1;
 
     int LAST_PIT_INDEX = 14;
+
+    String DRAW = "Draw";
 }

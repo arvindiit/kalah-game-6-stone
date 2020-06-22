@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Author: Arvind Pandey
- * On: 20/06/2020
+ * Author: Arvind Pandey On: 20/06/2020
+ * Player class to create Players
  */
 @Getter
 public enum Player {
