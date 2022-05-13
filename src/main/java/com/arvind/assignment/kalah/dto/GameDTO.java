@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.Map;
 
 /**
- * Created by Arvind Pandey on 20/06/2020.
+ * Created by Arvind Pandey.
  * Class for retuning the response.
  */
 @Getter

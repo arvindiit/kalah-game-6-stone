@@ -2,7 +2,6 @@ package com.arvind.assignment.kalah.utils;
 
 /**
  * Author: Arvind Pandey
- * On: 20/06/2020
  */
 public interface Constants {
 

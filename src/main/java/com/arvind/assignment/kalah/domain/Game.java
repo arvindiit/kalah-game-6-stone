@@ -41,34 +41,17 @@ public class Game {
         this.gameBoard = createBoard();
     }
 
-    /**
-     * Conversion from Game to GameDTO for sending the response
-     * Since this is for new Game, DTO does not contain status
-     * @param gameUrl
-     * @return
-     */
     public GameDTO toNewGameDTO(String gameUrl) {
-        String url = new UriTemplate(gameUrl).expand(id).toString();
+        var url = new UriTemplate(gameUrl).expand(id).toString();
         return new GameDTO(id, url);
     }
-
-    /**
-     * Conversion from Game to GameDTO for sending the response
-     * Since this is for existing Game, DTO does contain status
-     * @param gameUrl
-     * @return
-     */
-
+    
     public GameDTO toGameDTO(String gameUrl) {
-        Map<Integer, Integer> status = this.getGameBoard();
-        String url = new UriTemplate(gameUrl).expand(id).toString();
+        var status = this.getGameBoard();
+        var url = new UriTemplate(gameUrl).expand(id).toString();
         return new GameDTO(id, url, status, winner);
     }
-
-    /**
-     * Creating the game board at start of the game
-     * @return
-     */
+    
     private Map<Integer, Integer> createBoard() {
         Map<Integer, Integer> newBoard = new HashMap<>();
         for (int i = Constants.FIRST_PIT_INDEX; i <= Constants.LAST_PIT_INDEX; i++) {
@@ -83,5 +66,4 @@ public class Game {
     public enum Status {
         CREATED, IN_PROGRESS, OVER
     }
-
 }

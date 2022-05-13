@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * test for {@link GameController}
  * <p>
  * Author: Arvind Pandey
- * On: 20/06/2020
  */
 
 @RunWith(SpringRunner.class)

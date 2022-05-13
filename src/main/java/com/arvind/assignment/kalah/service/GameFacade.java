@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 /**
- * Author: Arvind Pandey On: 20/06/2020
+ * Author: Arvind Pandey
  * Facade class to control the game.
  */
 @Component
@@ -22,24 +22,22 @@ public class GameFacade {
      * Adding stones to right pit
      * Deciding which player turn is now
      * Checking the game status and declaring the winner
-     * @param pitId
-     * @param game
      */
-    public void makeMove(int pitId, Game game){
+    public void makeMove(int pitId, Game game) {
         //before making the move, check for the all the valid move
         validateMove(pitId, game);
         log.info("Move validated for game {} and pit {}", game.getId(), pitId);
 
         //start the move
-        Map<Integer, Integer> gameBoard = game.getGameBoard();
+        var gameBoard = game.getGameBoard();
         int stones = gameBoard.get(pitId);
         int lastIndex = pitId + stones;
-        for (int i = pitId+1; i <= lastIndex; i++){
+        for (int i = pitId+1; i <= lastIndex; i++) {
             if(i == Constants.LAST_PIT_INDEX){
-                if(i == game.getPlayer().getKalahId()){
+                if(i == game.getPlayer().getKalahId()) {
                     addStonesToPit(i, 1, gameBoard);
                     lastIndex = lastIndex - i;
-                }else{
+                } else {
                     lastIndex = lastIndex - (i-1);
                 }
                 i = 0;
@@ -61,7 +59,7 @@ public class GameFacade {
         }
 
         //check if game is over. If yes, declare the winner
-        if(checkIfGameOver(game)){
+        if(checkIfGameOver(game)) {
             game.setStatus(Game.Status.OVER);
             int firstPlayerStones = gameBoard.get(Player.FIRST_PLAYER.getKalahId());
             int secondPlayerStones = gameBoard.get(Player.SECOND_PLAYER.getKalahId());
@@ -74,46 +72,34 @@ public class GameFacade {
                 game.setWinner(Constants.DRAW);
             }
         }
-
     }
-
-    /**
-     * Check if move is valid or not. If not valid throw the exception
-     * @param pitId
-     * @param game
-     */
-    private void validateMove(int pitId, Game game){
-        Player player = game.getPlayer();
-        if(player.getKalahId() == pitId || player.getOppositePlayer().getKalahId() == pitId){
+    
+    private void validateMove(int pitId, Game game) {
+        var player = game.getPlayer();
+        if(player.getKalahId() == pitId || player.getOppositePlayer().getKalahId() == pitId) {
             log.error("You can not select a Kalah as pit Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("You can not select a Kalah as pit.");
         }
 
-        if(game.getGameBoard().get(pitId) == 0){
+        if(game.getGameBoard().get(pitId) == 0) {
             log.error("This pit is empty Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("This pit is empty.");
         }
 
-        if(!player.getPits().contains(pitId)){
+        if(!player.getPits().contains(pitId)) {
             log.error("This pit is not your pit. Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("This pit is not your pit. Your pits are: ", player.getPits());
         }
 
-        if(pitId < Constants.FIRST_PIT_INDEX || pitId > Constants.LAST_PIT_INDEX){
+        if(pitId < Constants.FIRST_PIT_INDEX || pitId > Constants.LAST_PIT_INDEX) {
             log.error("Invalid pit. Pits are only from 1 -> 6 and 8 -> 13. Game id: {} and pit id: {}", game.getId(), pitId);
             throw new InvalidPitException("Invalid pit. Pits are only from 1 -> 6 and 8 -> 13. Your pits are: ", player.getPits());
         }
 
     }
-
-    /**
-     * check if last pit if own pit and has only one stone.
-     * Then take all the stones from opposite pit and put in your kalah
-     * @param pitId
-     * @param game
-     */
+    
     private void checkLastPit(int pitId, Game game){
-        Map<Integer, Integer> gameBoard = game.getGameBoard();
+        var gameBoard = game.getGameBoard();
         if(game.getPlayer().getPits().contains(pitId) && gameBoard.get(pitId) == 1){
             int oppositePit = Constants.LAST_PIT_INDEX - pitId;
             int oppositeStones = gameBoard.get(oppositePit);
@@ -126,29 +112,25 @@ public class GameFacade {
             }
         }
     }
-
-    /**
-     * this method will check if game is over. Then move all the remaining stones of respective players to their Kalah
-     * @param game
-     */
-    private boolean checkIfGameOver(Game game){
+    
+    private boolean checkIfGameOver(Game game) {
         boolean isCurrentPlayerPitEmpty = game.getPlayer().getPits().stream()
                 .allMatch(pit -> game.getGameBoard().get(pit) == 0);
 
         boolean isOppsitePlayerPitEmpty = game.getPlayer().getOppositePlayer().getPits().stream()
                 .allMatch(pit -> game.getGameBoard().get(pit) == 0);
 
-        if(isCurrentPlayerPitEmpty || isOppsitePlayerPitEmpty){
+        if(isCurrentPlayerPitEmpty || isOppsitePlayerPitEmpty) {
             addAllStonesToKalah(game.getPlayer(), game.getGameBoard());
             addAllStonesToKalah(game.getPlayer().getOppositePlayer(), game.getGameBoard());
-            log.info("Game {} is over now", game.getId(), game.getId());
+            log.info("Game {} is over now", game.getId());
             return true;
         }
         return false;
     }
 
-    private void addAllStonesToKalah(Player player, Map<Integer, Integer> board){
-        player.getPits().stream().forEach(pit -> {
+    private void addAllStonesToKalah(Player player, Map<Integer, Integer> board) {
+        player.getPits().forEach(pit -> {
             int stones = board.get(pit);
             int kalah = player.getKalahId();
             board.put(kalah, board.get(kalah) + stones);

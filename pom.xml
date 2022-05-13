@@ -15,7 +15,7 @@
     <description>Assignment project of Kalah game</description>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <swagger.version>2.9.2</swagger.version>
         <lombok.version>1.18.12</lombok.version>
     </properties>
@@ -73,6 +73,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>10</source>
+                    <target>10</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

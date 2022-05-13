@@ -5,7 +5,7 @@ Technologies used
 
 Spring boot2
 
-Java8
+Java 11
 
 maven
  
@@ -43,11 +43,11 @@ Swagger Doc url
 http://localhost:8080/swagger-ui.html
 ```
 
-api endpoint
+Api endpoint
 ```
 curl --header "Content-Type: application/json" --request POST http://localhost:8080/games
 ```
-This will return:
+Response:
 
 ```json
 {
@@ -55,10 +55,11 @@ This will return:
     "url": "http://localhost:8080/games/1"
 }
 ```
+Api endpoint
 ```
-curl --header "Content-Type: application/json" --request POST http://localhost:8080/games/{gameId}/pits/{pitId}
+curl --header "Content-Type: application/json" --request PUT http://localhost:8080/games/{gameId}/pits/{pitId}
 ```
-This will return:
+Response:
 
 ```json
 {

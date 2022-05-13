@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 /**
- * Created by Arvind Pandey on 20/06/2020.
+ * Created by Arvind Pandey.
  * Class for retuning Error response.
  */
 @Getter
